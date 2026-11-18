@@ -1,0 +1,472 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-18T15:55:22Z",
+  "title": "Design System: RentFlow",
+  "extensions": {
+    "colorMeta": {
+      "blue-accent": {
+        "role": "primary",
+        "displayName": "RentFlow Blue",
+        "canonical": "#155FC0",
+        "tonalRamp": [
+          "#192433",
+          "#1B3B64",
+          "#1250A1",
+          "#1766CF",
+          "#3080E8",
+          "#5E9CED",
+          "#8CB8F2",
+          "#F0F2F4"
+        ]
+      },
+      "blue-accent-bright": {
+        "role": "primary",
+        "displayName": "Bright Roofline Blue",
+        "canonical": "#3687FF",
+        "tonalRamp": [
+          "#162337",
+          "#12376D",
+          "#0048B3",
+          "#005CE5",
+          "#1A76FF",
+          "#4D94FF",
+          "#80B3FF",
+          "#F0F2F5"
+        ]
+      },
+      "blue-cta-start": {
+        "role": "primary",
+        "displayName": "Action Gradient Start",
+        "canonical": "#1F6FF0",
+        "tonalRamp": [
+          "#182335",
+          "#183668",
+          "#0B47A7",
+          "#0E5BD7",
+          "#2875F1",
+          "#5893F4",
+          "#88B2F7",
+          "#F0F2F4"
+        ]
+      },
+      "blue-cta-end": {
+        "role": "primary",
+        "displayName": "Action Gradient End",
+        "canonical": "#145BD1",
+        "tonalRamp": [
+          "#192334",
+          "#1A3665",
+          "#1047A3",
+          "#145BD1",
+          "#2E75EB",
+          "#5C93EF",
+          "#8BB2F4",
+          "#F0F2F4"
+        ]
+      },
+      "night-ground": {
+        "role": "neutral",
+        "displayName": "Night Ground",
+        "canonical": "#050B14",
+        "tonalRamp": [
+          "#1C2430",
+          "#243A5B",
+          "#244F8F",
+          "#2E65B8",
+          "#477ED1",
+          "#709BDB",
+          "#99B8E6",
+          "#F1F2F4"
+        ]
+      },
+      "night-panel": {
+        "role": "neutral",
+        "displayName": "Night Panel",
+        "canonical": "#07111F",
+        "tonalRamp": [
+          "#1C2531",
+          "#233B5D",
+          "#215092",
+          "#2A67BB",
+          "#4480D5",
+          "#6D9CDE",
+          "#97B9E8",
+          "#F1F2F4"
+        ]
+      },
+      "night-input": {
+        "role": "neutral",
+        "displayName": "Night Input",
+        "canonical": "#0B1726",
+        "tonalRamp": [
+          "#1D252F",
+          "#273D59",
+          "#28548A",
+          "#346CB2",
+          "#4D85CB",
+          "#75A0D7",
+          "#9CBBE2",
+          "#F1F2F4"
+        ]
+      },
+      "night-border": {
+        "role": "neutral",
+        "displayName": "Night Border",
+        "canonical": "#1B2A3D",
+        "tonalRamp": [
+          "#20262D",
+          "#2E3E51",
+          "#37557C",
+          "#466E9F",
+          "#6087B9",
+          "#83A2C8",
+          "#A7BCD8",
+          "#F1F2F3"
+        ]
+      },
+      "night-text": {
+        "role": "neutral",
+        "displayName": "Night Text",
+        "canonical": "#F3F6FC",
+        "tonalRamp": [
+          "#1C2330",
+          "#24375B",
+          "#24478F",
+          "#2E5CB8",
+          "#4775D1",
+          "#7094DB",
+          "#99B3E6",
+          "#F1F2F4"
+        ]
+      },
+      "night-muted": {
+        "role": "neutral",
+        "displayName": "Night Supporting Text",
+        "canonical": "#9AACC2",
+        "tonalRamp": [
+          "#22262A",
+          "#353F4B",
+          "#43576F",
+          "#56708F",
+          "#7089A9",
+          "#90A4BC",
+          "#B0BECF",
+          "#F2F2F3"
+        ]
+      },
+      "light-ground": {
+        "role": "neutral",
+        "displayName": "Light Ground",
+        "canonical": "#F5F7FA",
+        "tonalRamp": [
+          "#21252C",
+          "#313D4F",
+          "#3C5377",
+          "#4D6B99",
+          "#6685B2",
+          "#88A0C3",
+          "#AABBD4",
+          "#F1F2F3"
+        ]
+      },
+      "light-panel": {
+        "role": "neutral",
+        "displayName": "Light Panel",
+        "canonical": "#FCFDFE",
+        "tonalRamp": [
+          "#1E262E",
+          "#294057",
+          "#2D5986",
+          "#3973AC",
+          "#538CC6",
+          "#79A6D2",
+          "#9FBFDF",
+          "#F1F2F4"
+        ]
+      },
+      "light-input": {
+        "role": "neutral",
+        "displayName": "Light Input",
+        "canonical": "#F7F9FC",
+        "tonalRamp": [
+          "#1F252E",
+          "#2B3C54",
+          "#315182",
+          "#3F68A7",
+          "#5882C0",
+          "#7D9ECE",
+          "#A2B9DC",
+          "#F1F2F3"
+        ]
+      },
+      "light-border": {
+        "role": "neutral",
+        "displayName": "Light Border",
+        "canonical": "#E2E8F0",
+        "tonalRamp": [
+          "#21262B",
+          "#313E4E",
+          "#3D5576",
+          "#4E6E97",
+          "#6887B1",
+          "#89A2C2",
+          "#ABBCD4",
+          "#F1F2F3"
+        ]
+      },
+      "light-text": {
+        "role": "neutral",
+        "displayName": "Light Text",
+        "canonical": "#14263C",
+        "tonalRamp": [
+          "#1E252E",
+          "#293D57",
+          "#2D5586",
+          "#396DAC",
+          "#5387C6",
+          "#79A1D2",
+          "#9FBCDF",
+          "#F1F2F4"
+        ]
+      },
+      "light-muted": {
+        "role": "neutral",
+        "displayName": "Light Supporting Text",
+        "canonical": "#62748A",
+        "tonalRamp": [
+          "#232629",
+          "#383F47",
+          "#4A5868",
+          "#5F7186",
+          "#798AA0",
+          "#97A4B5",
+          "#B4BECA",
+          "#F2F2F3"
+        ]
+      },
+      "night-scrim": {
+        "role": "neutral",
+        "displayName": "Night Photo Scrim",
+        "canonical": "#03101E",
+        "tonalRamp": [
+          "#192634",
+          "#1A3E65",
+          "#1057A2",
+          "#156FD1",
+          "#2E89EA",
+          "#5DA3EF",
+          "#8BBDF3",
+          "#F0F2F4"
+        ]
+      },
+      "night-error": {
+        "role": "tertiary",
+        "displayName": "Night Validation",
+        "canonical": "#FF9299",
+        "tonalRamp": [
+          "#371618",
+          "#6D1218",
+          "#B3000B",
+          "#E6000F",
+          "#FF1A28",
+          "#FF4D58",
+          "#FF8088",
+          "#F5F0F0"
+        ]
+      },
+      "light-error": {
+        "role": "tertiary",
+        "displayName": "Light Validation",
+        "canonical": "#B42336",
+        "tonalRamp": [
+          "#311B1E",
+          "#5E2129",
+          "#951D2D",
+          "#C0253A",
+          "#DA3F53",
+          "#E26A79",
+          "#EA94A0",
+          "#F4F1F1"
+        ]
+      },
+      "white-text": {
+        "role": "neutral",
+        "displayName": "Brand White",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8C8C8C",
+          "#A6A6A6",
+          "#BFBFBF",
+          "#F2F2F2"
+        ]
+      },
+      "night-toggle": {
+        "role": "neutral",
+        "displayName": "Translucent Theme Control",
+        "canonical": "#091728B3",
+        "tonalRamp": [
+          "#1C2531",
+          "#233D5D",
+          "#215492",
+          "#2A6CBB",
+          "#4485D5",
+          "#6DA0DE",
+          "#97BBE8",
+          "#F1F2F4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "RentFlow Display",
+        "purpose": "Bundled Montserrat display face for the wordmark and welcome headline."
+      },
+      "body": {
+        "displayName": "Platform Body",
+        "purpose": "Cupertino system body role on iOS and Material 3 body role on Android."
+      },
+      "label": {
+        "displayName": "Platform Control",
+        "purpose": "Cupertino action role on iOS and Material 3 label role on Android."
+      }
+    },
+    "shadows": [
+      {
+        "name": "welcome-headline",
+        "value": "0 2px 14px rgba(3,11,22,0.4)",
+        "purpose": "Soft contrast shadow behind the white welcome heading over the photograph."
+      }
+    ],
+    "motion": [
+      {
+        "name": "mode-indicator",
+        "value": "220ms cubic-bezier(0.22,1,0.36,1)",
+        "purpose": "Moves the blue selection line between sign-in and registration tabs."
+      },
+      {
+        "name": "form-mode-transition",
+        "value": "210ms opacity and 2.5% vertical rise",
+        "purpose": "Briefly fades and raises the fields when the account mode changes."
+      },
+      {
+        "name": "form-resize",
+        "value": "240ms cubic-bezier(0.22,1,0.36,1)",
+        "purpose": "Resizes the form when fields switch between sign-in and registration."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "provider-inline-min-width",
+        "value": "320px"
+      },
+      {
+        "name": "form-max-width",
+        "value": "470px"
+      },
+      {
+        "name": "provider-stack-text-scale",
+        "value": "1.25x"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "RentFlow RF Roofline Mark",
+      "kind": "custom",
+      "refersTo": "rentflow-mark",
+      "description": "Compact geometric RF and roofline mark used beside the RentFlow wordmark.",
+      "html": "<div class=\"ds-brand\" role=\"img\" aria-label=\"RentFlow\"><svg class=\"ds-mark\" viewBox=\"0 0 40 40\" aria-hidden=\"true\"><path class=\"ds-roof\" d=\"M4.5 13.8 20 4.8l15.5 9\"/><path class=\"ds-letter\" d=\"M9 34.5v-18h8.8c5.2 0 5.5 8.2-.1 8.2H9m7.4 0 5.9 9.8\"/><path class=\"ds-letter\" d=\"M26.5 34.5v-18H34m-7.5 7.9H33\"/></svg><span>RentFlow</span></div>",
+      "css": ".ds-brand{display:flex;align-items:center;gap:10px;color:#F3F6FC;font:700 17px/1 RentFlowDisplay,system-ui,sans-serif;letter-spacing:-.35px}.ds-mark{width:42px;height:42px;overflow:visible}.ds-roof,.ds-letter{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.8}.ds-roof{stroke:#3687FF}.ds-letter{stroke:#FFFFFF}"
+    },
+    {
+      "name": "Dark Auth Panel",
+      "kind": "card",
+      "refersTo": "auth-panel-dark",
+      "description": "Navy sheet overlapping the apartment photo with a broad upper radius.",
+      "html": "<section class=\"ds-auth-panel\"><h2>Đăng nhập</h2><p>Quản lý nhà trọ của bạn dễ dàng hơn.</p></section>",
+      "css": ".ds-auth-panel{padding:16px 23px 8px;background:#07111F;color:#F3F6FC;border:1px solid #223247;border-bottom:0;border-radius:32px 32px 0 0}.ds-auth-panel h2{margin:0 0 8px;font:700 20px/1.25 system-ui,sans-serif}.ds-auth-panel p{margin:0;color:#9AACC2;font:400 16px/1.4 system-ui,sans-serif}"
+    },
+    {
+      "name": "Mode Tabs",
+      "kind": "nav",
+      "refersTo": "mode-tabs",
+      "description": "Two-way sign-in and registration selector with a single moving blue indicator.",
+      "html": "<nav class=\"ds-tabs\" aria-label=\"Tài khoản\"><button class=\"ds-tab ds-active\" aria-current=\"page\">Đăng nhập</button><button class=\"ds-tab\">Đăng ký</button><span class=\"ds-indicator\"></span></nav>",
+      "css": ".ds-tabs{position:relative;display:flex;height:50px;border-bottom:1px solid #1B2A3D}.ds-tab{flex:1;border:0;background:transparent;color:#9AACC2;padding:8px 12px;font:600 16px system-ui,sans-serif;cursor:pointer}.ds-tab.ds-active{color:#F3F6FC}.ds-tab:focus-visible{outline:2px solid #3687FF;outline-offset:-3px;border-radius:8px}.ds-indicator{position:absolute;bottom:-1px;left:0;width:50%;height:3px;border-radius:3px;background:#155FC0;transition:transform 220ms cubic-bezier(.22,1,.36,1)}"
+    },
+    {
+      "name": "Dark Auth Field",
+      "kind": "input",
+      "refersTo": "auth-field-dark",
+      "description": "Outlined email or password field with a dark fill and blue focus state.",
+      "html": "<label class=\"ds-field\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3 6h18v12H3zM3 7l9 7 9-7\"/></svg><input type=\"text\" placeholder=\"Email hoặc số điện thoại\" aria-label=\"Email hoặc số điện thoại\"/></label>",
+      "css": ".ds-field{display:flex;align-items:center;gap:11px;min-height:56px;padding:0 15px;border:1px solid #1B2A3D;border-radius:15px;background:#0B1726;color:#F3F6FC}.ds-field:focus-within{border-color:#155FC0;box-shadow:0 0 0 1px #155FC0}.ds-field svg{width:20px;height:20px;fill:none;stroke:#9AACC2;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.ds-field input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:#F3F6FC;font:400 16px system-ui,sans-serif}.ds-field input::placeholder{color:#9AACC2;opacity:1}.ds-field:focus-within input::placeholder{opacity:.8}"
+    },
+    {
+      "name": "Light Auth Field",
+      "kind": "input",
+      "refersTo": "auth-field-light",
+      "description": "Light-mode counterpart with the same rounded outline and focus treatment.",
+      "html": "<label class=\"ds-field-light\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3 6h18v12H3zM3 7l9 7 9-7\"/></svg><input type=\"text\" placeholder=\"Email hoặc số điện thoại\" aria-label=\"Email hoặc số điện thoại\"/></label>",
+      "css": ".ds-field-light{display:flex;align-items:center;gap:11px;min-height:56px;padding:0 15px;border:1px solid #E2E8F0;border-radius:15px;background:#F7F9FC;color:#14263C}.ds-field-light:focus-within{border-color:#155FC0;box-shadow:0 0 0 1px #155FC0}.ds-field-light svg{width:20px;height:20px;fill:none;stroke:#62748A;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.ds-field-light input{min-width:0;flex:1;border:0;outline:0;background:transparent;color:#14263C;font:400 16px system-ui,sans-serif}.ds-field-light input::placeholder{color:#62748A;opacity:1}.ds-field-light:focus-within input::placeholder{opacity:.8}"
+    },
+    {
+      "name": "Primary Sign-in Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Full-width blue gradient action for sign-in or registration.",
+      "html": "<button class=\"ds-primary-button\"><span>Đăng nhập</span><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12h15m-6-6 6 6-6 6\"/></svg></button>",
+      "css": ".ds-primary-button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:54px;border:0;border-radius:15px;background:linear-gradient(90deg,#1F6FF0,#145BD1);color:#FFFFFF;font:700 16px system-ui,sans-serif;cursor:pointer;transition:filter 180ms ease,transform 180ms ease}.ds-primary-button:hover{filter:brightness(1.08)}.ds-primary-button:active{transform:scale(.99)}.ds-primary-button:focus-visible{outline:2px solid #3687FF;outline-offset:3px}.ds-primary-button svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}"
+    },
+    {
+      "name": "Unavailable Provider",
+      "kind": "button",
+      "refersTo": "provider-unavailable-dark",
+      "description": "Muted, disabled provider action with explicit setup status.",
+      "html": "<button class=\"ds-provider\" disabled aria-label=\"Google, Chưa cấu hình\"><span class=\"ds-google\" aria-hidden=\"true\">G</span><span class=\"ds-provider-copy\"><strong>Google</strong><small>Chưa cấu hình</small></span></button>",
+      "css": ".ds-provider{display:flex;align-items:center;justify-content:center;gap:9px;min-height:54px;padding:8px 12px;border:1px solid #1B2A3D;border-radius:14px;background:#0B1726;color:#9AACC2;font:600 14px system-ui,sans-serif;opacity:1}.ds-provider:disabled{cursor:not-allowed}.ds-google{color:#9AACC2;font:700 18px system-ui,sans-serif}.ds-provider-copy{display:flex;flex-direction:column;align-items:flex-start;gap:2px}.ds-provider-copy small{font-size:12px;font-weight:400}"
+    },
+    {
+      "name": "Light Unavailable Provider",
+      "kind": "button",
+      "refersTo": "provider-unavailable-light",
+      "description": "Light-mode disabled provider state with readable supporting status.",
+      "html": "<button class=\"ds-provider-light\" disabled aria-label=\"Số điện thoại, Chưa cấu hình\"><span class=\"ds-phone\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\"><rect x=\"6.5\" y=\"2.5\" width=\"11\" height=\"19\" rx=\"2\"/><path d=\"M10 5h4m-2 13h.01\"/></svg></span><span class=\"ds-provider-copy\"><strong>Số điện thoại</strong><small>Chưa cấu hình</small></span></button>",
+      "css": ".ds-provider-light{display:flex;align-items:center;justify-content:center;gap:9px;min-height:54px;padding:8px 12px;border:1px solid #E2E8F0;border-radius:14px;background:#F7F9FC;color:#62748A;font:600 14px system-ui,sans-serif;opacity:1}.ds-provider-light:disabled{cursor:not-allowed}.ds-phone svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.ds-provider-copy{display:flex;flex-direction:column;align-items:flex-start;gap:2px}.ds-provider-copy small{font-size:12px;font-weight:400}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Night-Lit Welcome",
+    "overview": "The login screen pairs a quiet apartment-at-night photograph and warm window light with a restrained navy form surface. The screen starts in dark mode; a deliberate theme control exposes the supported light palette. The user-pinned direction is: “Dark Premium. Modern Real Estate SaaS. Giao diện Flutter Mobile. Bám sát bố cục hình tham chiếu thứ hai. Sang trọng, tối giản, hiện đại.”\n\nThe photo and compact custom-painted RF roofline mark establish RentFlow; the form stays the clearest, most legible part of the screen. The RF roofline mark is RentFlow's first-party brand mark, drawn in Flutter code rather than borrowed from an icon package. The supplied Vietnamese supporting line remains “Quản lý nhà trọ của bạn dễ dàng hơn.”",
+    "keyCharacteristics": [
+      "Night facade, warm residential light, and a deep navy overlapping panel.",
+      "One precise blue family for selection, focus, links, and the primary action.",
+      "Platform-native controls and honest service feedback."
+    ],
+    "rules": [
+      {
+        "name": "The Single Blue Rule",
+        "body": "Keep blue tied to interactive meaning; do not add a second decorative accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The System Role Rule",
+        "body": "Keep form labels and entered text in adaptive platform roles; reserve RentFlowDisplay for brand display moments.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do preserve the supplied Vietnamese supporting line and the pinned Dark Premium direction.",
+      "Do keep all touch targets at least 48 logical px and preserve the scrollable form above the keyboard.",
+      "Do keep provider status and unavailable-auth feedback truthful until a provider is configured."
+    ],
+    "donts": [
+      "Don't add decorative shadows, extra accent colors, or a replacement logo asset.",
+      "Don't style provider options as active or imply that sign-in, registration, phone, Google, or recovery is connected."
+    ]
+  }
+}

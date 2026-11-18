@@ -1,55 +1,49 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../app/theme/app_theme.dart';
 import '../../../../app/theme/app_theme_cubit.dart';
-import '../widgets/auth_text_field.dart';
-import '../widgets/social_login_button.dart';
+import '../widgets/login_form.dart';
+import '../widgets/rentflow_logo.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final _identityController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  bool _obscurePassword = true;
-  bool _rememberMe = true;
-  bool _showRegisterTab = false;
-
-  @override
-  void dispose() {
-    _identityController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final palette = _LoginPalette.fromBrightness(isDark);
+    final panelColor = isDark
+        ? RentFlowPalette.darkPanel
+        : RentFlowPalette.lightPanel;
+    final keyboardVisible = MediaQuery.viewInsetsOf(context).bottom > 0;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: palette.panel,
+        systemNavigationBarColor: panelColor,
         systemNavigationBarIconBrightness: isDark
             ? Brightness.light
             : Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor: palette.panel,
+        backgroundColor: panelColor,
+        resizeToAvoidBottomInset: true,
         body: LayoutBuilder(
           builder: (context, constraints) {
             final height = constraints.maxHeight;
-            final panelTop = height * 0.34;
             final topInset = MediaQuery.paddingOf(context).top;
+            final textScale = MediaQuery.textScalerOf(context).scale(1);
+            final textScaleRelief = ((textScale - 1).clamp(0.0, 1.0) * .08)
+                .toDouble();
+            final panelTopFactor = (.36 + textScaleRelief)
+                .clamp(.36, .44)
+                .toDouble();
+            final panelTop = height * (keyboardVisible ? .15 : panelTopFactor);
+            final heroHeight = height * (keyboardVisible ? .24 : .49);
 
             return Stack(
               fit: StackFit.expand,
@@ -58,20 +52,29 @@ class _LoginPageState extends State<LoginPage> {
                   top: 0,
                   left: 0,
                   right: 0,
-                  height: height * 0.56,
+                  height: heroHeight,
                   child: _HeroArtwork(isDark: isDark),
                 ),
-                Positioned(
-                  top: topInset + 72,
-                  left: 27,
-                  right: 136,
-                  child: _WelcomeHeading(isDark: isDark),
-                ),
-                Positioned(
-                  top: topInset + 12,
-                  right: 22,
-                  child: _ThemeToggle(isDark: isDark),
-                ),
+                if (!keyboardVisible) ...[
+                  Positioned(
+                    top: topInset + 15,
+                    left: 24,
+                    child: RentFlowLogo(size: 42, lightOnDark: isDark),
+                  ),
+                  Positioned(
+                    top: topInset + 9,
+                    right: 18,
+                    child: const _ThemeToggle(),
+                  ),
+                  Positioned(
+                    top: topInset + 70,
+                    // Keep the welcome title against the open sky portion of
+                    // the daytime photo instead of the busy apartment facade.
+                    left: 25,
+                    right: 25,
+                    child: _WelcomeHeading(isDark: isDark),
+                  ),
+                ],
                 Positioned(
                   top: panelTop,
                   left: 0,
@@ -79,30 +82,32 @@ class _LoginPageState extends State<LoginPage> {
                   bottom: 0,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: palette.panel,
+                      color: panelColor,
                       borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(34),
+                        top: Radius.circular(32),
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(
-                            alpha: isDark ? 0.24 : 0.10,
-                          ),
-                          blurRadius: 22,
-                          offset: const Offset(0, -8),
+                      border: Border(
+                        top: BorderSide(
+                          color: isDark
+                              ? const Color(0xFF223247)
+                              : const Color(0xFFE6EBF2),
                         ),
-                      ],
+                      ),
                     ),
                     child: SafeArea(
                       top: false,
                       child: SingleChildScrollView(
                         keyboardDismissBehavior:
                             ScrollViewKeyboardDismissBehavior.onDrag,
-                        padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+                        padding: const EdgeInsets.fromLTRB(23, 16, 23, 8),
                         child: Center(
                           child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 430),
-                            child: _buildForm(context, palette, isDark),
+                            constraints: const BoxConstraints(maxWidth: 470),
+                            child: LoginForm(
+                              isDark: isDark,
+                              onAuthIntent: (intent) =>
+                                  _showAuthUnavailable(context, intent),
+                            ),
                           ),
                         ),
                       ),
@@ -117,117 +122,30 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildForm(BuildContext context, _LoginPalette palette, bool isDark) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _AuthTabs(
-          selectedRegister: _showRegisterTab,
-          palette: palette,
-          onSelect: (isRegister) {
-            setState(() => _showRegisterTab = isRegister);
-          },
+  void _showAuthUnavailable(BuildContext context, AuthIntent intent) {
+    final message = switch (intent) {
+      AuthIntent.signIn =>
+        'Đăng nhập chưa khả dụng: dự án chưa kết nối dịch vụ xác thực.',
+      AuthIntent.signUp =>
+        'Đăng ký chưa khả dụng: dự án chưa kết nối dịch vụ xác thực.',
+      AuthIntent.google => 'Google Sign-In chưa được cấu hình trong dự án.',
+      AuthIntent.phone =>
+        'Đăng nhập bằng số điện thoại chưa được cấu hình trong dự án.',
+      AuthIntent.resetPassword =>
+        'Đặt lại mật khẩu chưa khả dụng vì dịch vụ xác thực chưa được kết nối.',
+    };
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: isDark
+              ? const Color(0xFF17263A)
+              : const Color(0xFF20334A),
+          content: Text(message),
         ),
-        const SizedBox(height: 20),
-        AuthTextField(
-          controller: _identityController,
-          hint: 'Email hoặc số điện thoại',
-          icon: Icons.mail_outline_rounded,
-          keyboardType: TextInputType.emailAddress,
-          isDark: isDark,
-        ),
-        const SizedBox(height: 10),
-        AuthTextField(
-          controller: _passwordController,
-          hint: 'Mật khẩu',
-          icon: Icons.lock_outline_rounded,
-          isDark: isDark,
-          obscureText: _obscurePassword,
-          onToggleVisibility: () {
-            setState(() => _obscurePassword = !_obscurePassword);
-          },
-        ),
-        const SizedBox(height: 9),
-        _RememberAndForgot(
-          checked: _rememberMe,
-          palette: palette,
-          onRememberChanged: (value) {
-            setState(() => _rememberMe = value ?? false);
-          },
-        ),
-        const SizedBox(height: 17),
-        SizedBox(
-          height: 54,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              gradient: const LinearGradient(
-                colors: [Color(0xFF1765F5), Color(0xFF0860F7)],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF1765F5).withValues(alpha: 0.18),
-                  blurRadius: 14,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: TextButton(
-              onPressed: () => FocusScope.of(context).unfocus(),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _showRegisterTab ? 'Đăng ký' : 'Đăng nhập',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  const Icon(Icons.arrow_forward_rounded, size: 19),
-                ],
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 18),
-        _OrDivider(palette: palette),
-        const SizedBox(height: 15),
-        Row(
-          children: [
-            Expanded(
-              child: SocialLoginButton(
-                label: 'Google',
-                google: true,
-                isDark: isDark,
-                onPressed: () => FocusScope.of(context).unfocus(),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: SocialLoginButton(
-                label: 'Số điện thoại',
-                isDark: isDark,
-                onPressed: () => FocusScope.of(context).unfocus(),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 18),
-        _RegisterFooter(
-          isRegistering: _showRegisterTab,
-          palette: palette,
-          onTap: () => setState(() => _showRegisterTab = !_showRegisterTab),
-        ),
-      ],
-    );
+      );
   }
 }
 
@@ -238,143 +156,54 @@ class _HeroArtwork extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final panel = isDark
+        ? RentFlowPalette.darkPanel
+        : RentFlowPalette.lightPanel;
     return Stack(
       fit: StackFit.expand,
       children: [
+        Image.asset(
+          isDark
+              ? 'assets/images/rentflow_login_hero.png'
+              : 'assets/images/rentflow_login_hero_day.png',
+          fit: BoxFit.cover,
+          alignment: const Alignment(0, -.18),
+          errorBuilder: (context, error, stackTrace) => DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: isDark
+                    ? const [Color(0xFF102A48), Color(0xFF050B14)]
+                    : const [Color(0xFFDCEBFA), Color(0xFFF5F7FA)],
+              ),
+            ),
+          ),
+        ),
         DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: isDark
-                  ? const [Color(0xFF071427), Color(0xFF102B49)]
-                  : const [Color(0xFFEAF5FF), Color(0xFFC5DDF5)],
-            ),
-          ),
-        ),
-        Positioned.fill(
-          child: CustomPaint(painter: _ApartmentPainter(isDark: isDark)),
-        ),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.transparent,
-                isDark
-                    ? const Color(0xFF050912).withValues(alpha: 0.08)
-                    : const Color(0xFFF7F9FC).withValues(alpha: 0.02),
-                isDark
-                    ? const Color(0xFF050912).withValues(alpha: 0.82)
-                    : const Color(0xFFF7F9FC).withValues(alpha: 0.55),
-              ],
-              stops: const [0, 0.55, 1],
+                  ? [
+                      const Color(0xFF03101E).withValues(alpha: .42),
+                      const Color(0xFF03101E).withValues(alpha: .24),
+                      const Color(0xFF03101E).withValues(alpha: .60),
+                      panel.withValues(alpha: .97),
+                    ]
+                  : [
+                      const Color(0xFFF5F7FA).withValues(alpha: .02),
+                      const Color(0xFFF5F7FA).withValues(alpha: .07),
+                      const Color(0xFFF5F7FA).withValues(alpha: .18),
+                      panel.withValues(alpha: .98),
+                    ],
+              stops: const [0, .34, .72, 1],
             ),
           ),
         ),
       ],
     );
-  }
-}
-
-class _ApartmentPainter extends CustomPainter {
-  const _ApartmentPainter({required this.isDark});
-
-  final bool isDark;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final width = size.width;
-    final height = size.height;
-    final glowCenter = Offset(width * 0.86, height * 0.45);
-    final glowRadius = width * 0.34;
-    final glowShader = RadialGradient(
-      colors: isDark
-          ? const [Color(0x443B86C7), Color(0x003B86C7)]
-          : const [Color(0x99FFFFFF), Color(0x00FFFFFF)],
-    ).createShader(Rect.fromCircle(center: glowCenter, radius: glowRadius));
-    canvas.drawCircle(glowCenter, glowRadius, Paint()..shader = glowShader);
-
-    final outlineColor = isDark
-        ? const Color(0x6679A9D4)
-        : const Color(0x665D83A8);
-    final fillColor = isDark
-        ? const Color(0x1C73A5D2)
-        : const Color(0x1A648BB1);
-
-    final tower = Path()
-      ..moveTo(width * 0.66, height)
-      ..lineTo(width * 0.66, height * 0.52)
-      ..quadraticBezierTo(
-        width * 0.66,
-        height * 0.48,
-        width * 0.70,
-        height * 0.47,
-      )
-      ..lineTo(width * 0.88, height * 0.35)
-      ..quadraticBezierTo(
-        width * 0.91,
-        height * 0.34,
-        width * 0.93,
-        height * 0.38,
-      )
-      ..lineTo(width, height * 0.46)
-      ..lineTo(width, height)
-      ..close();
-
-    canvas.drawPath(tower, Paint()..color = fillColor);
-    canvas.drawPath(
-      tower,
-      Paint()
-        ..color = outlineColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.25,
-    );
-
-    final facadePaint = Paint()
-      ..color = outlineColor.withValues(alpha: 0.68)
-      ..strokeWidth = 0.85
-      ..style = PaintingStyle.stroke;
-    for (var i = 1; i < 5; i++) {
-      final y = height * (0.48 + i * 0.085);
-      canvas.drawLine(Offset(width * 0.67, y), Offset(width, y), facadePaint);
-    }
-    for (var i = 1; i < 5; i++) {
-      final x = width * (0.67 + i * 0.066);
-      canvas.drawLine(Offset(x, height * 0.47), Offset(x, height), facadePaint);
-    }
-
-    final sweep = Path()
-      ..moveTo(width * 0.68, height * 0.92)
-      ..cubicTo(
-        width * 0.78,
-        height * 0.77,
-        width * 0.86,
-        height * 0.84,
-        width * 0.93,
-        height * 0.67,
-      )
-      ..cubicTo(
-        width * 0.96,
-        height * 0.57,
-        width * 0.98,
-        height * 0.59,
-        width,
-        height * 0.53,
-      );
-    canvas.drawPath(
-      sweep,
-      Paint()
-        ..color = outlineColor.withValues(alpha: 0.5)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.1,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant _ApartmentPainter oldDelegate) {
-    return oldDelegate.isDark != isDark;
   }
 }
 
@@ -385,312 +214,101 @@ class _WelcomeHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final headingColor = isDark
-        ? const Color(0xFFF5F8FE)
-        : const Color(0xFF102A49);
-    final bodyColor = isDark
-        ? const Color(0xFFD0DDED)
-        : const Color(0xFF405A77);
-    final brandColor = isDark
-        ? const Color(0xFF9FCBFF)
-        : const Color(0xFF2878F9);
+    final role = Theme.of(context).textTheme.headlineMedium;
+    const title = 'Chào mừng!';
+    final baseStyle = role?.copyWith(
+      fontFamily: RentFlowTypography.display,
+      fontSize: 31,
+      height: 1.15,
+      fontWeight: FontWeight.w800,
+      letterSpacing: -.7,
+    );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.apartment_rounded, size: 16, color: brandColor),
-            const SizedBox(width: 7),
-            Text(
-              'RENTFLOW',
-              style: TextStyle(
-                color: brandColor,
-                fontSize: 10,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 2.2,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Text(
-          'Chào mừng!',
-          style: TextStyle(
-            color: headingColor,
-            fontSize: 32,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -0.9,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'Quản lý nhà trọ của bạn dễ dàng hơn',
-          style: TextStyle(
-            color: bodyColor,
-            fontSize: 13,
-            height: 1.3,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
+    return Text(
+      title,
+      style: baseStyle?.copyWith(
+        color: isDark ? Colors.white : const Color(0xFF07182C),
+      ),
     );
   }
 }
 
 class _ThemeToggle extends StatelessWidget {
-  const _ThemeToggle({required this.isDark});
-
-  final bool isDark;
+  const _ThemeToggle();
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
+    final tooltip = isDark
+        ? 'Chuyển sang giao diện sáng'
+        : 'Chuyển sang giao diện tối';
+    void onPressed() {
+      final nextIsDark = !isDark;
+      context.read<AppThemeCubit>().toggleTheme();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!context.mounted) return;
+        SystemChrome.setSystemUIOverlayStyle(
+          SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: nextIsDark
+                ? Brightness.light
+                : Brightness.dark,
+            statusBarBrightness: nextIsDark
+                ? Brightness.dark
+                : Brightness.light,
+            systemNavigationBarColor: nextIsDark
+                ? RentFlowPalette.darkPanel
+                : RentFlowPalette.lightPanel,
+            systemNavigationBarIconBrightness: nextIsDark
+                ? Brightness.light
+                : Brightness.dark,
+          ),
+        );
+      });
+    }
+
+    final foreground = isDark ? Colors.white : RentFlowPalette.lightText;
+    final controlSurface = isDark
+        ? const Color(0xB3091728)
+        : Colors.white.withValues(alpha: .78);
+    final icon = Icon(
+      isDark
+          ? isIOS
+                ? CupertinoIcons.sun_max
+                : Icons.light_mode_outlined
+          : isIOS
+          ? CupertinoIcons.moon
+          : Icons.dark_mode_outlined,
+      color: foreground,
+      size: 20,
+    );
+
+    if (isIOS) {
+      return Semantics(
+        button: true,
+        label: tooltip,
+        child: CupertinoButton(
+          minimumSize: const Size.square(48),
+          padding: EdgeInsets.zero,
+          color: controlSurface,
+          borderRadius: BorderRadius.circular(24),
+          onPressed: onPressed,
+          child: icon,
+        ),
+      );
+    }
+
     return Material(
-      color: isDark ? const Color(0x99091320) : const Color(0xCCFFFFFF),
+      color: controlSurface,
       shape: const CircleBorder(),
       child: IconButton(
-        onPressed: context.read<AppThemeCubit>().toggleTheme,
-        tooltip: isDark
-            ? 'Chuyển sang giao diện sáng'
-            : 'Chuyển sang giao diện tối',
-        icon: Icon(
-          isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-          color: isDark ? Colors.white : const Color(0xFF17304F),
-          size: 20,
-        ),
-        constraints: const BoxConstraints.tightFor(width: 42, height: 42),
+        onPressed: onPressed,
+        tooltip: tooltip,
+        icon: icon,
+        constraints: const BoxConstraints.tightFor(width: 48, height: 48),
         padding: EdgeInsets.zero,
       ),
     );
   }
-}
-
-class _AuthTabs extends StatelessWidget {
-  const _AuthTabs({
-    required this.selectedRegister,
-    required this.palette,
-    required this.onSelect,
-  });
-
-  final bool selectedRegister;
-  final _LoginPalette palette;
-  final ValueChanged<bool> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _AuthTab(
-          label: 'Đăng nhập',
-          selected: !selectedRegister,
-          palette: palette,
-          onTap: () => onSelect(false),
-        ),
-        _AuthTab(
-          label: 'Đăng ký',
-          selected: selectedRegister,
-          palette: palette,
-          onTap: () => onSelect(true),
-        ),
-      ],
-    );
-  }
-}
-
-class _AuthTab extends StatelessWidget {
-  const _AuthTab({
-    required this.label,
-    required this.selected,
-    required this.palette,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final _LoginPalette palette;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Column(
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  color: selected ? palette.primaryText : palette.secondaryText,
-                  fontSize: 14,
-                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                height: selected ? 2.5 : 1,
-                color: selected ? palette.accent : palette.divider,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RememberAndForgot extends StatelessWidget {
-  const _RememberAndForgot({
-    required this.checked,
-    required this.palette,
-    required this.onRememberChanged,
-  });
-
-  final bool checked;
-  final _LoginPalette palette;
-  final ValueChanged<bool?> onRememberChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 22,
-          height: 22,
-          child: Checkbox(
-            value: checked,
-            onChanged: onRememberChanged,
-            activeColor: palette.accent,
-            checkColor: Colors.white,
-            side: BorderSide(color: palette.checkboxBorder),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
-            visualDensity: VisualDensity.compact,
-          ),
-        ),
-        const SizedBox(width: 7),
-        Expanded(
-          child: Text(
-            'Ghi nhớ đăng nhập',
-            style: TextStyle(color: palette.secondaryText, fontSize: 10.5),
-          ),
-        ),
-        TextButton(
-          onPressed: () => FocusScope.of(context).unfocus(),
-          style: TextButton.styleFrom(
-            minimumSize: Size.zero,
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            foregroundColor: palette.accent,
-          ),
-          child: const Text(
-            'Quên mật khẩu?',
-            style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w600),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _OrDivider extends StatelessWidget {
-  const _OrDivider({required this.palette});
-
-  final _LoginPalette palette;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(child: Divider(color: palette.divider, height: 1)),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            'Hoặc đăng nhập với',
-            style: TextStyle(color: palette.secondaryText, fontSize: 10.5),
-          ),
-        ),
-        Expanded(child: Divider(color: palette.divider, height: 1)),
-      ],
-    );
-  }
-}
-
-class _RegisterFooter extends StatelessWidget {
-  const _RegisterFooter({
-    required this.isRegistering,
-    required this.palette,
-    required this.onTap,
-  });
-
-  final bool isRegistering;
-  final _LoginPalette palette;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          isRegistering ? 'Đã có tài khoản? ' : 'Chưa có tài khoản? ',
-          style: TextStyle(color: palette.secondaryText, fontSize: 11),
-        ),
-        InkWell(
-          onTap: onTap,
-          child: Text(
-            isRegistering ? 'Đăng nhập' : 'Đăng ký',
-            style: TextStyle(
-              color: palette.accent,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _LoginPalette {
-  const _LoginPalette({
-    required this.panel,
-    required this.primaryText,
-    required this.secondaryText,
-    required this.accent,
-    required this.divider,
-    required this.checkboxBorder,
-  });
-
-  factory _LoginPalette.fromBrightness(bool isDark) {
-    if (isDark) {
-      return const _LoginPalette(
-        panel: Color(0xFF050912),
-        primaryText: Color(0xFFF3F6FC),
-        secondaryText: Color(0xFF91A5BF),
-        accent: Color(0xFF1680FF),
-        divider: Color(0xFF172235),
-        checkboxBorder: Color(0xFF32435A),
-      );
-    }
-    return const _LoginPalette(
-      panel: Color(0xFFFCFDFE),
-      primaryText: Color(0xFF152A43),
-      secondaryText: Color(0xFF7B899B),
-      accent: Color(0xFF2878F9),
-      divider: Color(0xFFE5EAF1),
-      checkboxBorder: Color(0xFFD4DDE8),
-    );
-  }
-
-  final Color panel;
-  final Color primaryText;
-  final Color secondaryText;
-  final Color accent;
-  final Color divider;
-  final Color checkboxBorder;
 }
